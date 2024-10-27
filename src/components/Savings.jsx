@@ -1,15 +1,44 @@
-import { useContext } from "react";
-import { FinanceContext } from "../context/FinanceContext";
+// src/components/Savings.jsx
+import React, { useState } from "react";
+import useSavings from "../hooks/useSavings";
 
 function Savings() {
-  const { savingsGoal } = useContext(FinanceContext);
+  const { savingsGoal, updateSavingsGoal, remainingGoal } = useSavings();
+  const [newGoal, setNewGoal] = useState("");
+
+  const handleSaveGoal = () => {
+    if (newGoal) {
+      updateSavingsGoal(Number(newGoal));
+      setNewGoal("");
+    }
+  };
 
   return (
     <div className="bg-white p-4 rounded shadow">
       <h2 className="text-xl font-semibold">Savings Goal</h2>
-      <p className="mt-2">Goal: ${savingsGoal}</p>
+      <input
+        type="number"
+        value={newGoal}
+        onChange={(e) => setNewGoal(e.target.value)}
+        placeholder="Enter new savings goal"
+        className="mt-2 p-2 border rounded w-full"
+      />
+      <button
+        onClick={handleSaveGoal}
+        className="mt-2 p-2 bg-green-500 text-white rounded w-full"
+      >
+        Save Goal
+      </button>
+      <p className="mt-4">
+        Current Goal:{" "}
+        {savingsGoal !== null ? `$${savingsGoal}` : "Goal not set"}
+      </p>
+      <p>
+        Remaining Goal:{" "}
+        {remainingGoal !== null ? `$${remainingGoal}` : "No data yet"}
+      </p>
     </div>
   );
 }
 
-export default Savings;
+export default React.memo(Savings);

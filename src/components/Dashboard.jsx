@@ -1,16 +1,13 @@
-import { useContext } from "react";
-import { FinanceContext } from "../context/FinanceContext";
+import useSavings from "../hooks/useSavings";
 
 function Dashboard() {
-  const { income, expenses, savingsGoal } = useContext(FinanceContext);
-  const remaining = savingsGoal - (income - expenses);
+  const { savingsGoal, remainingGoal } = useSavings();
 
   return (
     <div className="bg-white p-4 rounded shadow">
       <h2 className="text-xl font-semibold">Dashboard</h2>
-      <p>Income: ${income}</p>
-      <p>Expenses: ${expenses}</p>
-      <p>Remaining Savings Goal: ${remaining}</p>
+      <p>Savings Goal: ${savingsGoal}</p>
+      <p>Remaining Goal: ${remainingGoal > 0 ? remainingGoal : 0}</p>
     </div>
   );
 }
