@@ -1,14 +1,17 @@
 // src/components/Expenses.jsx
 import React, { useState } from "react";
-import useExpenses from "../hooks/useExpenses";
+import { useContext } from "react";
+import { FinanceContext } from "../context/FinanceContext";
 
 function Expenses() {
-  const { expenses, addExpense } = useExpenses();
+  const { addExpense, expenses } = useContext(FinanceContext);
+  const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
 
   const handleAddExpense = () => {
-    if (amount) {
-      addExpense(Number(amount));
+    if (category && amount) {
+      addExpense(category, amount);
+      setCategory("");
       setAmount("");
     }
   };
@@ -17,24 +20,34 @@ function Expenses() {
     <div className="bg-white p-4 rounded shadow">
       <h2 className="text-xl font-semibold">Expenses</h2>
       <input
+        type="text"
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        placeholder="Expense Category"
+        className="p-2 border rounded w-full mt-2"
+      />
+      <input
         type="number"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
-        placeholder="Enter expense amount"
-        className="mt-2 p-2 border rounded w-full"
+        placeholder="Amount"
+        className="p-2 border rounded w-full mt-2"
       />
       <button
         onClick={handleAddExpense}
-        className="mt-2 p-2 bg-red-500 text-white rounded w-full"
+        className="bg-red-500 text-white rounded w-full p-2 mt-2"
       >
         Add Expense
       </button>
-      <p className="mt-2">
-        Total Expenses:{" "}
-        {expenses !== null ? `$${expenses}` : "No expenses recorded yet"}
-      </p>
+      <ul className="mt-2">
+        {expenses.map((exp, index) => (
+          <li key={index}>
+            {exp.category}: ${exp.amount}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
 
-export default React.memo(Expenses);
+export default Expenses;
